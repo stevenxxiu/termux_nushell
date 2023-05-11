@@ -1,0 +1,4 @@
+/nushell/
+/pkg/
+/src/
+/*.tar.zst
