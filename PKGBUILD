@@ -18,7 +18,7 @@ prepare() {
   sudo find '/opt/android-ndk/' -name 'libunwind.a' -execdir sh -c 'echo "INPUT(-lunwind)" > libgcc.a' \;
 
   yes | sudo pacman --config "${HOME}/pacman_aarch64.conf" --arch aarch64 --sync openssl zlib
-  sudo chown --recursive build "${HOME}/aarch64${TERMUX_PREFIX}"
+  sudo chown --recursive build "${TERMUX_PREFIX}"
 
   rustup target add aarch64-linux-android
   cargo fetch --target aarch64-linux-android --locked
@@ -46,11 +46,11 @@ build() {
   export CFLAGS=''
   CFLAGS+=' -fstack-protector-strong'
   CFLAGS+=' -Oz'
-  CFLAGS+=" -I${HOME}/aarch64${TERMUX_PREFIX}/include"
+  CFLAGS+=" -I${TERMUX_PREFIX}/include"
 
   export RUSTFLAGS="-C link-args=-Wl,-rpath=${TERMUX_PREFIX}/lib"
 
-  export OPENSSL_DIR="${HOME}/aarch64${TERMUX_PREFIX}"
+  export OPENSSL_DIR="${TERMUX_PREFIX}"
 
   cargo build \
     --target aarch64-linux-android \
