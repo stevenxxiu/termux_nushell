@@ -6,7 +6,8 @@ pkgdesc='A new type of shell'
 arch=('aarch64')
 url='https://www.nushell.sh'
 license=('MIT')
-makedepends=('cargo' 'git')
+depends=(openssl zlib)
+makedepends=(cargo git)
 source=("git+https://github.com/nushell/nushell.git#commit=$_commit")
 sha256sums=('SKIP')
 
