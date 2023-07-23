@@ -1,19 +1,18 @@
 pkgname=nushell
-pkgver=0.79.0
-_commit=a1b72611215dbfca257351003204a80c83859e05
+pkgver=0.82.0
 pkgrel=1
-pkgdesc='A new type of shell'
+pkgdesc='A new type of shell operating on structured data'
 arch=('aarch64')
 url='https://www.nushell.sh'
 license=('MIT')
 depends=(openssl zlib)
-source=("git+https://github.com/nushell/nushell.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/nushell/nushell/archive/$pkgver.tar.gz")
+sha256sums=('587847feeb9fc06eb2a9da5ff05ffea5238fe5928ebea944c042838d8ad136e8')
 
 TERMUX_PREFIX='/data/data/com.termux/files/usr'
 
 prepare() {
-  cd "$pkgname"
+  cd "$pkgname-$pkgver"
 
   doas find '/opt/android-ndk/' -name 'libunwind.a' -execdir sh -c 'echo "INPUT(-lunwind)" > libgcc.a' \;
 
@@ -24,21 +23,14 @@ prepare() {
   cargo fetch --target aarch64-linux-android --locked
 
   # Patches
-  patch --forward --strip 1 --input "${startdir}/extern-with-blocks.patch"
-
   for d in ~/.cargo/registry/src/github.com-*/pwd-*; do
     patch --silent --strip 1 --directory ${d} < "${startdir}/crates-pwd-for-android.diff" || :
   done
   patch --forward --strip 1 --input "${startdir}/user-home-dir.patch"
 }
 
-pkgver() {
-  cd "$pkgname"
-  git describe --tags
-}
-
 build() {
-  cd "$pkgname"
+  cd "$pkgname-$pkgver"
 
   export AR_aarch64_linux_android='llvm-ar'
 
@@ -56,11 +48,11 @@ build() {
     --locked \
     --release \
     --workspace \
-    --features dataframe
+    --features=extra,dataframe
 }
 
 package() {
-  cd "$pkgname"
+  cd "$pkgname-$pkgver"
   install -Dm700 -t "${pkgdir}${TERMUX_PREFIX}/bin" target/aarch64-linux-android/release/nu
   install -Dm600 -t "${pkgdir}${TERMUX_PREFIX}/share/doc/${pkgname}" LICENSE
 }

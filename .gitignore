@@ -1,5 +1,5 @@
 /nushell/
 /pkg/
 /src/
-/*.pkg.tar.gz
+/*.tar.gz
 /*.tar.zst
