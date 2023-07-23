@@ -7,7 +7,6 @@ arch=('aarch64')
 url='https://www.nushell.sh'
 license=('MIT')
 depends=(openssl zlib)
-makedepends=(cargo git)
 source=("git+https://github.com/nushell/nushell.git#commit=$_commit")
 sha256sums=('SKIP')
 
@@ -16,10 +15,10 @@ TERMUX_PREFIX='/data/data/com.termux/files/usr'
 prepare() {
   cd "$pkgname"
 
-  sudo find '/opt/android-ndk/' -name 'libunwind.a' -execdir sh -c 'echo "INPUT(-lunwind)" > libgcc.a' \;
+  doas find '/opt/android-ndk/' -name 'libunwind.a' -execdir sh -c 'echo "INPUT(-lunwind)" > libgcc.a' \;
 
-  yes | sudo pacman --config "${HOME}/pacman_aarch64.conf" --arch aarch64 --sync openssl zlib
-  sudo chown --recursive build "${TERMUX_PREFIX}"
+  yes | doas pacman --config "${HOME}/pacman_aarch64.conf" --arch aarch64 --sync openssl zlib
+  doas chown --recursive build "${TERMUX_PREFIX}"
 
   rustup target add aarch64-linux-android
   cargo fetch --target aarch64-linux-android --locked
@@ -41,8 +40,7 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  export PATH="/opt/android-ndk/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
-  export AR_aarch64_linux_android='/opt/android-ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'
+  export AR_aarch64_linux_android='llvm-ar'
 
   export CFLAGS=''
   CFLAGS+=' -fstack-protector-strong'
