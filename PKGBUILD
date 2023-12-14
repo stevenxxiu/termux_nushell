@@ -1,5 +1,5 @@
 pkgname=nushell
-pkgver=0.82.0
+pkgver=0.88.0
 pkgrel=1
 pkgdesc='A new type of shell operating on structured data'
 arch=('aarch64')
@@ -7,7 +7,7 @@ url='https://www.nushell.sh'
 license=('MIT')
 depends=(openssl zlib)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/nushell/nushell/archive/$pkgver.tar.gz")
-sha256sums=('587847feeb9fc06eb2a9da5ff05ffea5238fe5928ebea944c042838d8ad136e8')
+sha256sums=('6272a5c17219156c82fe22aa4fdf5580a361a3c8150114a4046e8df4939a2797')
 
 TERMUX_PREFIX='/data/data/com.termux/files/usr'
 
@@ -21,12 +21,6 @@ prepare() {
 
   rustup target add aarch64-linux-android
   cargo fetch --target aarch64-linux-android --locked
-
-  # Patches
-  for d in ~/.cargo/registry/src/github.com-*/pwd-*; do
-    patch --silent --strip 1 --directory ${d} < "${startdir}/crates-pwd-for-android.diff" || :
-  done
-  patch --forward --strip 1 --input "${startdir}/user-home-dir.patch"
 }
 
 build() {
