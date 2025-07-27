@@ -1,5 +1,5 @@
 pkgname=nushell
-pkgver=0.88.0
+pkgver=0.106.0
 pkgrel=1
 pkgdesc='A new type of shell operating on structured data'
 arch=('aarch64')
@@ -7,7 +7,7 @@ url='https://www.nushell.sh'
 license=('MIT')
 depends=(openssl zlib)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/nushell/nushell/archive/$pkgver.tar.gz")
-sha256sums=('6272a5c17219156c82fe22aa4fdf5580a361a3c8150114a4046e8df4939a2797')
+sha256sums=('3b0f26b293e76b4d6a9f593184ceca18e9853c6c5e81fcc958405040f0792bcc')
 
 TERMUX_PREFIX='/data/data/com.termux/files/usr'
 
@@ -41,8 +41,7 @@ build() {
     --target aarch64-linux-android \
     --locked \
     --release \
-    --workspace \
-    --features=extra,dataframe
+    --workspace
 }
 
 package() {
